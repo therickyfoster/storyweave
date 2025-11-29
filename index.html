@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>NEXUS: MMO Storyweave Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --bg: #050716;
+    --bg-alt: #0b0f25;
+    --accent: #7af0ff;
+    --accent-soft: rgba(122, 240, 255, 0.16);
+    --accent-strong: #22d3ee;
+    --accent-warm: #f97316;
+    --text: #f9fafb;
+    --muted: #9ca3af;
+    --danger: #f97373;
+    --success: #4ade80;
+    --card: rgba(15, 23, 42, 0.88);
+    --border: rgba(148, 163, 184, 0.3);
+    --glow: 0 0 30px rgba(56, 189, 248, 0.6);
+    --radius-xl: 1.5rem;
+    --radius-lg: 1rem;
+    --radius-pill: 999px;
+    --transition-fast: 200ms ease-out;
+    --transition-med: 350ms ease;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #0f172a 0, #020617 50%, #000 100%);
+    color: var(--text);
+    min-height: 100%;
+  }
+
+  body {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .app-shell {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    border-radius: 2rem;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.7), rgba(56, 189, 248, 0), rgba(94, 234, 212, 0.5));
+    box-shadow: 0 25px 80px rgba(15, 23, 42, 0.9);
+    overflow: hidden;
+  }
+
+  .app-inner {
+    position: relative;
+    border-radius: calc(2rem - 1px);
+    background: radial-gradient(circle at 20% 0, rgba(56, 189, 248, 0.15), transparent 60%),
+                radial-gradient(circle at 80% 100%, rgba(59, 130, 246, 0.32), transparent 65%),
+                #020617;
+    min-height: min(90vh, 780px);
+    display: flex;
+    flex-direction: column;
+    padding: 18px 18px 20px;
+    overflow: hidden;
+  }
+
+  /* Splash screen */
+
+  .splash {
+    position: absolute;
+    inset: 0;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: radial-gradient(circle at top, rgba(56, 189, 248, 0.22), transparent 55%),
+                radial-gradient(circle at bottom, rgba(14, 165, 233, 0.35), transparent 65%),
+                #020617;
+    color: var(--text);
+    z-index: 20;
+    transition: opacity 600ms ease, transform 600ms ease;
+  }
+
+  .splash.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-12px) scale(0.98);
+  }
+
+  .splash-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--radius-pill);
+    padding: 5px 11px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .chip span.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+  }
+
+  .splash-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .splash-orb {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background: conic-gradient(from 210deg, #22c55e, #0ea5e9, #6366f1, #22c55e);
+    position: relative;
+    box-shadow: var(--glow);
+  }
+
+  .splash-orb::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: inherit;
+    background: radial-gradient(circle at 30% 30%, #f9fafb, #22d3ee 50%, #020617 90%);
+  }
+
+  .splash-titleblock {
+    margin-top: 40px;
+    max-width: 580px;
+  }
+
+  .splash-title {
+    font-size: clamp(2.1rem, 4vw, 3.1rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .splash-highlight {
+    background: linear-gradient(120deg, #f97316, #22d3ee);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .splash-subtitle {
+    margin-top: 14px;
+    font-size: 0.98rem;
+    max-width: 560px;
+    color: #e5e7eb;
+  }
+
+  .splash-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 22px;
+    margin-top: 32px;
+  }
+
+  .splash-card {
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    font-size: 0.85rem;
+  }
+
+  .splash-card h3 {
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    color: #e5e7eb;
+  }
+
+  .splash-card p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .splash-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 26px;
+  }
+
+  .splash-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-primary {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: var(--radius-pill);
+    padding: 9px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--bg);
+    bac
